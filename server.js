@@ -50,7 +50,7 @@ app.get(
   '/auth/facebook',
   passport.authenticate('facebook', {
     // <6> Scopes
-    scope: ['instagram_manage_insights', 'instagram_basic'],
+    scope: ['instagram_manage_insights', 'instagram_basic', 'pages_show_list', 'instagram_content_publish'],
   })
 );
 
