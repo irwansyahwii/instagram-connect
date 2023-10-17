@@ -27,7 +27,7 @@ passport.use(
     {
       clientID: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      callbackURL: `${process.env.BASE_URL}/auth/facebook/callback`,
+      callbackURL: `https://cpeqah8x3a.ap-southeast-1.awsapprunner.com/auth/facebook/callback`,
     },
     // <3> Verify callback
     (accessToken, refreshToken, profile, done) => {
