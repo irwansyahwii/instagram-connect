@@ -6,6 +6,8 @@ const { SuperfaceClient } = require('@superfaceai/one-sdk');
 const axios = require('axios');
 
 
+
+
 require('dotenv').config();
 
 const longLiveToken = {
@@ -13,10 +15,6 @@ const longLiveToken = {
   "token_type": "bearer",
   "expires_in": 5184000
 };
-
-const ACCESS_TOKEN = longLiveToken.access_token;
-const PAGE_ID = "160589493784897";
-
 
 const sdk = new SuperfaceClient();
 
