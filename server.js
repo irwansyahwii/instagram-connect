@@ -3,8 +3,7 @@ const session = require('express-session');
 const passport = require('passport');
 const { Strategy } = require('passport-facebook');
 const { SuperfaceClient } = require('@superfaceai/one-sdk');
-import { Client} from 'instagram-graph-api';
-import axios from 'axios';
+const axios = require('axios');
 
 
 require('dotenv').config();
@@ -17,7 +16,6 @@ const longLiveToken = {
 
 const ACCESS_TOKEN = longLiveToken.access_token;
 const PAGE_ID = "160589493784897";
-const client = new Client(ACCESS_TOKEN, PAGE_ID);
 
 
 const sdk = new SuperfaceClient();
@@ -65,12 +63,24 @@ app.get(
   })
 );
 
-app.get('/query', passport.authenticate('facebook'), async function(req, res, next) {
+app.get('/query', async function(req, res, next) {
   const igid = req.query['igid'];
   
-  const response = await axios.get(`https://graph.facebook.com/v18.0/17841462406046553?fields=business_discovery.username(${igid})`);
+  let response = null;
+  try {
+    response = await axios.get(`https://graph.facebook.com/v18.0/17841462406046553?fields=business_discovery.username(${igid}){followers_count,media_count}&access_token=${longLiveToken.access_token}`);
 
-  res.json(response.data);    
+    res.json(response.data);    
+      
+  } catch (error) {
+    if(error.response && error.response.data){
+      res.json(error.response.data);
+    }else{
+      res.json({error:error});
+    }
+    
+    // res.json(response.data);
+  }
 });
 
 // <7> Callback handler
