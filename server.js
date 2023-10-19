@@ -1,14 +1,24 @@
-/**
- * Copyright: https://superface.ai/blog/instagram-login
- */
-
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const { Strategy } = require('passport-facebook');
 const { SuperfaceClient } = require('@superfaceai/one-sdk');
+import { Client} from 'instagram-graph-api';
+import axios from 'axios';
+
 
 require('dotenv').config();
+
+const longLiveToken = {
+  "access_token": "EAAMK352nowgBOzFMaxMSJmCQn0Jx6y2hyZChzuBagtmZBKnGUD3DEfhrsrehHNPZAIZAkZBi9AVnuK03W8g1d1uKtha2xGxJpVQFMIMVS2E4uzxP6zAlxHRtCCuHViZC0QEge1JXNAZBLRa6BgakNMK5kCFIaf8KE8U9SEJr1CKs1IBVbP2YAET8gZDZD",
+  "token_type": "bearer",
+  "expires_in": 5184000
+};
+
+const ACCESS_TOKEN = longLiveToken.access_token;
+const PAGE_ID = "160589493784897";
+const client = new Client(ACCESS_TOKEN, PAGE_ID);
+
 
 const sdk = new SuperfaceClient();
 
@@ -50,9 +60,18 @@ app.get(
   '/auth/facebook',
   passport.authenticate('facebook', {
     // <6> Scopes
-    scope: ['instagram_manage_insights', 'instagram_basic', 'pages_show_list', 'instagram_content_publish'],
+    // scope: ['instagram_manage_insights', 'instagram_basic'],    
+    scope: ['user_profile','user_media']
   })
 );
+
+app.get('/query', passport.authenticate('facebook'), async function(req, res, next) {
+  const igid = req.query['igid'];
+  
+  const response = await axios.get(`https://graph.facebook.com/v18.0/17841462406046553?fields=business_discovery.username(${igid})`);
+
+  res.json(response.data);    
+});
 
 // <7> Callback handler
 app.get(
