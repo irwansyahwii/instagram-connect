@@ -51,6 +51,10 @@ app.use(
 );
 app.use(passport.initialize());
 
+app.get('/', async function(req, res, next) {
+  res.send('<h2>Please wait...</h2>');
+});
+
 // <5> Start authentication flow
 app.get(
   '/auth/facebook',
