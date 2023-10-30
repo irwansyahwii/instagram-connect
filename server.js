@@ -61,7 +61,7 @@ app.get(
   passport.authenticate('facebook', {
     // <6> Scopes
     // scope: ['instagram_manage_insights', 'instagram_basic'],    
-    scope: ['pages_show_list', 'instagram_basic', 'instagram_content_publish']
+    scope: ['pages_show_list', 'instagram_manage_insights', 'pages_read_engagement', 'business_management', 'ads_management', 'instagram_basic', 'instagram_content_publish']
     // scope: ['user_profile','user_media']
   })
 );
