@@ -98,7 +98,8 @@ app.get(
       // <8> Obtaining profiles
       const accessToken = req.user.accessToken;
 
-      res.redirect(`${process.env.BASE_URL}?access_token=${accessToken}`);
+      // res.redirect(`${process.env.BASE_URL}?access_token=${accessToken}`);
+      res.redirect(`ice://ice-connect?access_token=${accessToken}`);
 
       // const sdkProfile = await sdk.getProfile(
       //   'social-media/publishing-profiles@1.0.1'
