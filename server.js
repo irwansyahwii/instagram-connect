@@ -89,6 +89,40 @@ app.get('/query', async function(req, res, next) {
   }
 });
 
+app.get('/tiktok-token', async function (req, res, next)  {
+  const response = await axios.post("https://open-platform.tiktokapis.com/v2/oauth/token/", {
+    client_key: "awx69ixwylhnmp57",     
+    client_secret: 'gndfeAtMATJeeBVKE9Q3wkNlMDOiEmh7',
+    code: req.query['code'] || "",
+    grant_type: 'authorization_code',
+    redirect_uri: 'https://www.ice.id/login-callback/',
+    code_verifier: req.query['code_verifier'] || "",
+  });
+
+  /*
+{
+    "access_token": "act.example12345Example12345Example",
+    "expires_in": 86400,
+    "open_id": "afd97af1-b87b-48b9-ac98-410aghda5344",
+    "refresh_expires_in": 31536000,
+    "refresh_token": "rft.example12345Example12345Example",
+    "scope": "user.info.basic,video.list",
+    "token_type": "Bearer"
+}  
+  */
+  // https://open.tiktokapis.com/v2/user/info
+  const profileResponse = await axios.post('https://open.tiktokapis.com/v2/user/info', {
+
+  }, {
+    headers: {
+      Authorization: `Bearer ${response.access_token}`
+    }
+  });
+
+  res.json(profileResponse);
+});
+
+
 // <7> Callback handler
 app.get(
   '/auth/facebook/callback',
