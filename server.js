@@ -89,7 +89,7 @@ app.get('/query', async function(req, res, next) {
   }
 });
 
-app.get('/tiktok-token', async function (req, res, next)  {
+app.post('/tiktok-token', async function (req, res, next)  {
   const response = await axios.post("https://open-platform.tiktokapis.com/v2/oauth/token/", {
     client_key: "awx69ixwylhnmp57",     
     client_secret: 'gndfeAtMATJeeBVKE9Q3wkNlMDOiEmh7',
