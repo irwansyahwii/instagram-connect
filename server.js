@@ -1,3 +1,5 @@
+// import qs from 'qs'
+const qs = require('qs');
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -50,6 +52,7 @@ app.use(
   session({ secret: 'keyboard cat', resave: false, saveUninitialized: true })
 );
 app.use(passport.initialize());
+app.use(express.json());
 
 app.get('/', async function(req, res, next) {
   res.send('<h2>Please wait...</h2>');
@@ -90,36 +93,45 @@ app.get('/query', async function(req, res, next) {
 });
 
 app.post('/tiktok-token', async function (req, res, next)  {
-  const response = await axios.post("https://open-platform.tiktokapis.com/v2/oauth/token/", {
-    client_key: "awx69ixwylhnmp57",     
-    client_secret: 'gndfeAtMATJeeBVKE9Q3wkNlMDOiEmh7',
-    code: req.query['code'] || "",
-    grant_type: 'authorization_code',
-    redirect_uri: 'https://www.ice.id/login-callback/',
-    code_verifier: req.query['code_verifier'] || "",
-  });
+  try{
+    const params = {
+      code: req.body.code || "",
+      code_verifier: req.body.code_verifier || "",
+      client_key: "awx69ixwylhnmp57",     
+      grant_type: 'authorization_code',
+      client_secret: 'gndfeAtMATJeeBVKE9Q3wkNlMDOiEmh7',
+      redirect_uri: 'https://www.ice.id/login-callback/',
+    };
+    const response = await axios.post("https://open.tiktokapis.com/v2/oauth/token/", new URLSearchParams(params), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+  
+    /*
+  {
+      "access_token": "act.example12345Example12345Example",
+      "expires_in": 86400,
+      "open_id": "afd97af1-b87b-48b9-ac98-410aghda5344",
+      "refresh_expires_in": 31536000,
+      "refresh_token": "rft.example12345Example12345Example",
+      "scope": "user.info.basic,video.list",
+      "token_type": "Bearer"
+  }  
+    */
+    // https://open.tiktokapis.com/v2/user/info
+    const profileResponse = await axios.get('https://open.tiktokapis.com/v2/user/info?fields=open_id,union_id,avatar_url,avatar_url_100,avatar_large_url,display_name,bio_description,profile_deep_link,is_verified,follower_count,following_count,likes_count,video_count', {}, {
+      headers: {
+        Authorization: `Bearer ${response.data.access_token}`
+      }
+    });
+  
+    res.json(profileResponse);
+  }catch(e){
+    console.error(e);
+    res.json({error: e});
+  }
 
-  /*
-{
-    "access_token": "act.example12345Example12345Example",
-    "expires_in": 86400,
-    "open_id": "afd97af1-b87b-48b9-ac98-410aghda5344",
-    "refresh_expires_in": 31536000,
-    "refresh_token": "rft.example12345Example12345Example",
-    "scope": "user.info.basic,video.list",
-    "token_type": "Bearer"
-}  
-  */
-  // https://open.tiktokapis.com/v2/user/info
-  const profileResponse = await axios.post('https://open.tiktokapis.com/v2/user/info', {
-
-  }, {
-    headers: {
-      Authorization: `Bearer ${response.access_token}`
-    }
-  });
-
-  res.json(profileResponse);
 });
 
 
