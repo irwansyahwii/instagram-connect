@@ -102,6 +102,9 @@ app.post('/tiktok-token', async function (req, res, next)  {
       client_secret: 'gndfeAtMATJeeBVKE9Q3wkNlMDOiEmh7',
       redirect_uri: 'https://www.ice.id/login-callback/',
     };
+
+    console.log('request body:', req.body);
+
     const response = await axios.post("https://open.tiktokapis.com/v2/oauth/token/", new URLSearchParams(params), {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -109,6 +112,11 @@ app.post('/tiktok-token', async function (req, res, next)  {
     });
 
     console.log('access_token: ', response.data);
+
+    if(response.data.error){
+      res.json(response.data);
+      return;
+    }
   
     /*
   {
@@ -129,6 +137,10 @@ app.post('/tiktok-token', async function (req, res, next)  {
     });
 
     console.log('profileResponse: ', profileResponse);
+    if(profileResponse.data.error){
+      res.json(profileResponse.data);
+      return;
+    }
   
     res.json(profileResponse);
   }catch(e){
