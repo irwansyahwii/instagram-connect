@@ -103,11 +103,12 @@ app.post('/tiktok-token', async function (req, res, next)  {
       redirect_uri: 'https://www.ice.id/login-callback/',
     };
 
-    console.log('request body:', req.body);
+    console.log('request params:', params);
 
     const response = await axios.post("https://open.tiktokapis.com/v2/oauth/token/", new URLSearchParams(params), {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cache-Control': 'no-cache'
       }
     });
 
