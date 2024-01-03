@@ -136,7 +136,12 @@ app.post('/tiktok-token', async function (req, res, next)  {
     //     Authorization: `Bearer ${response.data.access_token}`
     //   }
     // });
-    const profileResponse = await axios.get('https://open.tiktokapis.com/v2/user/info?fields=open_id,union_id,avatar_url', {}, {
+
+    //https://open.tiktokapis.com/v2/user/info/?fields=open_id,union_id,avatar_url,avatar_url_100,avatar_large_url,display_name,bio_description,profile_deep_link,is_verified,follower_count,following_count,likes_count,video_count
+    const profileResponse = await axios.get('https://open.tiktokapis.com/v2/user/info/', {
+      params: {
+        'fields': 'open_id,union_id,avatar_url,avatar_url_100,avatar_large_url,display_name,bio_description,profile_deep_link,is_verified,follower_count,following_count,likes_count,video_count'
+      },
       headers: {
         Authorization: `Bearer ${response.data.access_token}`
       }
