@@ -107,6 +107,8 @@ app.post('/tiktok-token', async function (req, res, next)  {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
+
+    console.log('access_token: ', response.data);
   
     /*
   {
@@ -125,6 +127,8 @@ app.post('/tiktok-token', async function (req, res, next)  {
         Authorization: `Bearer ${response.data.access_token}`
       }
     });
+
+    console.log('profileResponse: ', profileResponse);
   
     res.json(profileResponse);
   }catch(e){
