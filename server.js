@@ -161,6 +161,24 @@ app.post('/tiktok-token', async function (req, res, next)  {
 
 });
 
+app.get(
+  '/login-callback',  
+  async function (req, res, next) {
+    try {
+      // <8> Obtaining profiles
+      const authCode = req.code;
+
+      // res.redirect(`${process.env.BASE_URL}?access_token=${accessToken}`);
+      res.redirect(`ice://tiktok-login?code=${authCode}`);
+
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 
 // <7> Callback handler
 app.get(
